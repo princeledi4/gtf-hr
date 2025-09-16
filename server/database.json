@@ -1,0 +1,474 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "employee@company.com",
+      "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+      "name": "Setor",
+      "role": "employee",
+      "department": "Engineering",
+      "position": "Software Engineer",
+      "avatar": "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&dpr=2&fit=crop&crop=face",
+      "phone": "+1 (555) 123-4567",
+      "address": "123 Main Street, San Francisco, CA 94105",
+      "employeeId": "EMP001",
+      "startDate": "2023-01-15",
+      "manager": "Sarah Wilson",
+      "status": "active",
+      "twoFactorEnabled": false,
+      "onboardingStatus": "in_progress",
+      "onboardingProgress": 60,
+      "bio": "Passionate software engineer with 5+ years of experience in full-stack development."
+    },
+    {
+      "id": "2",
+      "email": "hr@company.com",
+      "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+      "name": "Sarah Wilson",
+      "role": "hr",
+      "department": "Human Resources",
+      "position": "HR Manager",
+      "avatar": "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&dpr=2&fit=crop&crop=face",
+      "phone": "+15552345678",
+      "address": "456 Oak Avenue, San Francisco, CA 94105",
+      "employeeId": "EMP002",
+      "startDate": "2022-03-10",
+      "manager": "Michael Chen",
+      "status": "active",
+      "twoFactorEnabled": true,
+      "onboardingStatus": "completed",
+      "onboardingProgress": 100
+    },
+    {
+      "id": "3",
+      "email": "admin@company.com",
+      "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+      "name": "Michael Chen",
+      "role": "admin",
+      "department": "IT",
+      "position": "System Administrator",
+      "avatar": "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&dpr=2&fit=crop&crop=face",
+      "phone": "+15553456789",
+      "address": "789 Pine Street, San Francisco, CA 94105",
+      "employeeId": "EMP003",
+      "startDate": "2021-11-05",
+      "manager": null,
+      "status": "active",
+      "twoFactorEnabled": true,
+      "onboardingStatus": "completed",
+      "onboardingProgress": 100
+    },
+    {
+      "id": "97075984-3fbb-4fd6-b956-f85f98766dc7",
+      "name": "Setor",
+      "email": "setor@example.com",
+      "phone": "+15554567890",
+      "department": "Human Resources",
+      "position": "M - IT",
+      "address": null,
+      "manager": null,
+      "password": "$2b$10$1m8sZiml2JuG3Rz4XQ/3TuD7a7/l3qC50oFKOc4HvfPdJDEaH5zde",
+      "employeeId": "EMP004",
+      "status": "active",
+      "twoFactorEnabled": false,
+      "onboardingStatus": "pending",
+      "onboardingProgress": 0,
+      "role": "employee"
+    }
+  ],
+  "roles": [
+    {
+      "id": "1",
+      "name": "Employee",
+      "description": "Basic employee access with personal data management",
+      "userCount": 2,
+      "permissions": [
+        "profile:read",
+        "profile:write",
+        "leave:create",
+        "leave:read",
+        "attendance:create",
+        "payroll:read"
+      ],
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "name": "HR Manager",
+      "description": "HR staff with employee management capabilities",
+      "userCount": 1,
+      "permissions": [
+        "employee:read",
+        "employee:write",
+        "leave:approve",
+        "payroll:manage",
+        "appraisal:manage"
+      ],
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "name": "Super Admin",
+      "description": "Full system access and configuration",
+      "userCount": 1,
+      "permissions": [
+        "*"
+      ],
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "permissions": [
+    {
+      "id": "1",
+      "name": "profile:read",
+      "description": "View profile information",
+      "resource": "profile",
+      "action": "read"
+    },
+    {
+      "id": "2",
+      "name": "profile:write",
+      "description": "Edit profile information",
+      "resource": "profile",
+      "action": "write"
+    },
+    {
+      "id": "3",
+      "name": "leave:create",
+      "description": "Create leave requests",
+      "resource": "leave",
+      "action": "create"
+    },
+    {
+      "id": "4",
+      "name": "leave:read",
+      "description": "View leave requests",
+      "resource": "leave",
+      "action": "read"
+    },
+    {
+      "id": "5",
+      "name": "leave:approve",
+      "description": "Approve leave requests",
+      "resource": "leave",
+      "action": "approve"
+    },
+    {
+      "id": "6",
+      "name": "employee:read",
+      "description": "View employee data",
+      "resource": "employee",
+      "action": "read"
+    },
+    {
+      "id": "7",
+      "name": "employee:write",
+      "description": "Edit employee data",
+      "resource": "employee",
+      "action": "write"
+    },
+    {
+      "id": "8",
+      "name": "payroll:read",
+      "description": "View payroll information",
+      "resource": "payroll",
+      "action": "read"
+    },
+    {
+      "id": "9",
+      "name": "payroll:manage",
+      "description": "Manage payroll",
+      "resource": "payroll",
+      "action": "manage"
+    },
+    {
+      "id": "10",
+      "name": "appraisal:manage",
+      "description": "Manage performance appraisals",
+      "resource": "appraisal",
+      "action": "manage"
+    }
+  ],
+  "departments": [
+    {
+      "id": "1",
+      "name": "Engineering",
+      "description": "Software development and technical operations",
+      "headId": "1",
+      "employeeCount": 45,
+      "budget": 2500000,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "name": "Human Resources",
+      "description": "People operations and talent management",
+      "headId": "2",
+      "employeeCount": 8,
+      "budget": 800000,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "name": "Marketing",
+      "description": "Brand management and customer acquisition",
+      "headId": null,
+      "employeeCount": 12,
+      "budget": 1200000,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "4",
+      "name": "Finance",
+      "description": "Financial planning and accounting",
+      "headId": null,
+      "employeeCount": 15,
+      "budget": 900000,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "5",
+      "name": "Operations",
+      "description": "Business operations and process management",
+      "headId": null,
+      "employeeCount": 23,
+      "budget": 1800000,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "appraisals": [
+    {
+      "id": "1",
+      "employeeId": "1",
+      "employeeName": "John Doe",
+      "managerId": "2",
+      "managerName": "Sarah Wilson",
+      "cycle": "Q4 2024",
+      "period": "2024-10-01 to 2024-12-31",
+      "status": "self_assessment",
+      "overallScore": 0,
+      "overallComment": "",
+      "employeeComment": "",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "criteria": [
+        {
+          "id": "1",
+          "name": "Technical Skills",
+          "description": "Programming and technical competency",
+          "weight": 25,
+          "maxScore": 5
+        },
+        {
+          "id": "2",
+          "name": "Communication",
+          "description": "Verbal and written communication skills",
+          "weight": 20,
+          "maxScore": 5
+        },
+        {
+          "id": "3",
+          "name": "Teamwork",
+          "description": "Collaboration and team participation",
+          "weight": 20,
+          "maxScore": 5
+        },
+        {
+          "id": "4",
+          "name": "Problem Solving",
+          "description": "Analytical and problem-solving abilities",
+          "weight": 20,
+          "maxScore": 5
+        },
+        {
+          "id": "5",
+          "name": "Leadership",
+          "description": "Leadership potential and initiative",
+          "weight": 15,
+          "maxScore": 5
+        }
+      ],
+      "responses": []
+    }
+  ],
+  "leaveRequests": [
+    {
+      "id": "1",
+      "employeeId": "1",
+      "employeeName": "John Doe",
+      "type": "annual",
+      "startDate": "2024-12-20",
+      "endDate": "2024-12-27",
+      "days": 6,
+      "reason": "Christmas vacation with family",
+      "handoverTo": "Sarah Wilson",
+      "handoverNotes": "Handle urgent client calls and review pending PRs",
+      "status": "approved",
+      "comments": [],
+      "createdAt": "2024-12-01T00:00:00.000Z",
+      "updatedAt": "2024-12-01T00:00:00.000Z"
+    },
+    {
+      "id": "acbc0be8-2a85-478a-82f1-83dd379a8ff2",
+      "employeeId": "1",
+      "type": "study",
+      "startDate": "2025-09-20",
+      "endDate": "2025-09-27",
+      "reason": "CC & CCNA Exams",
+      "handoverTo": "John",
+      "handoverNotes": "Handle IT issues",
+      "days": 8,
+      "status": "handover_pending",
+      "comments": [],
+      "createdAt": "2025-09-13T16:46:15.846Z",
+      "updatedAt": "2025-09-13T16:46:15.846Z"
+    },
+    {
+      "id": "07034604-00e5-4cab-94b1-4fe6fb5c1b2c",
+      "employeeId": "1",
+      "type": "sick",
+      "startDate": "2025-09-15",
+      "endDate": "2025-09-16",
+      "reason": "dfvs",
+      "handoverTo": "sdfsdf",
+      "handoverNotes": "wefe",
+      "days": 2,
+      "status": "line_manager_approval",
+      "comments": [],
+      "createdAt": "2025-09-15T08:18:22.779Z",
+      "updatedAt": "2025-09-15T08:18:22.779Z"
+    }
+  ],
+  "timeEntries": [
+    {
+      "id": "1",
+      "employeeId": "1",
+      "type": "clock_in",
+      "timestamp": "2024-12-16T09:00:00.000Z",
+      "location": "Office - San Francisco HQ"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "1",
+      "userId": "1",
+      "title": "Leave request approved",
+      "message": "Your vacation request has been approved",
+      "type": "success",
+      "read": false,
+      "createdAt": "2024-12-16T00:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "userId": "2",
+      "title": "New employee onboarding",
+      "message": "Alex Johnson needs onboarding assistance",
+      "type": "info",
+      "read": true,
+      "createdAt": "2024-12-16T00:00:00.000Z"
+    }
+  ],
+  "integrations": [
+    {
+      "id": "1",
+      "name": "Google Workspace",
+      "description": "Sync with Google Calendar and Drive",
+      "status": "connected",
+      "config": {
+        "apiKeyRef": "ENV_GOOGLE_API_KEY",
+        "domain": "company.com"
+      }
+    },
+    {
+      "id": "2",
+      "name": "Microsoft 365",
+      "description": "Integrate with Teams and Office",
+      "status": "disconnected",
+      "config": {}
+    },
+    {
+      "id": "3",
+      "name": "Slack",
+      "description": "Send notifications to Slack channels",
+      "status": "connected",
+      "config": {
+        "webhookRef": "ENV_SLACK_WEBHOOK_URL"
+      }
+    }
+  ],
+  "systemSettings": {
+    "company": {
+      "name": "TechCorp Inc.",
+      "address": "123 Business Ave, San Francisco, CA 94105",
+      "phone": "+15551234567",
+      "email": "contact@techcorp.com",
+      "website": "https://techcorp.com"
+    },
+    "security": {
+      "passwordMinLength": 8,
+      "sessionTimeout": 30,
+      "twoFactorRequired": false,
+      "allowRemoteAccess": true
+    },
+    "notifications": {
+      "emailNotifications": true,
+      "leaveApprovalAlerts": true,
+      "payrollNotifications": true,
+      "systemMaintenanceAlerts": true
+    }
+  },
+  "onboarding": [
+    {
+      "id": "1",
+      "employeeId": "1",
+      "status": "in_progress",
+      "progress": 60,
+      "checklist": [
+        {
+          "id": "1",
+          "task": "Complete personal information",
+          "completed": true,
+          "dueDate": "2023-01-16"
+        },
+        {
+          "id": "2",
+          "task": "Submit required documents",
+          "completed": true,
+          "dueDate": "2023-01-17"
+        },
+        {
+          "id": "3",
+          "task": "IT equipment assignment",
+          "completed": true,
+          "dueDate": "2023-01-18"
+        },
+        {
+          "id": "4",
+          "task": "Attend orientation session",
+          "completed": false,
+          "dueDate": "2023-01-20"
+        },
+        {
+          "id": "5",
+          "task": "Complete probation plan",
+          "completed": false,
+          "dueDate": "2023-01-25"
+        }
+      ],
+      "createdAt": "2023-01-15T00:00:00.000Z"
+    }
+  ],
+  "attendanceUploads": [
+    {
+      "id": "1",
+      "employeeId": "1",
+      "fileName": "attendance_december_2024.csv",
+      "uploadDate": "2024-12-16T00:00:00.000Z",
+      "status": "processed",
+      "totalHours": 160,
+      "workingDays": 20
+    }
+  ]
+}
