@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { employeeAPI, departmentAPI } from '@/services/api';
+import { documentAPI } from '@/services/documentAPI';
+import { OnboardingDocuments } from '@/components/documents/OnboardingDocuments';
 import {
   Users,
   Search,
@@ -30,6 +32,7 @@ import {
   UserPlus,
   FileText,
   Filter,
+  Paperclip,
 } from 'lucide-react';
 
 export const EmployeeManagementPage: React.FC = () => {
@@ -39,6 +42,8 @@ export const EmployeeManagementPage: React.FC = () => {
   const [departments, setDepartments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showOnboardingDialog, setShowOnboardingDialog] = useState(false);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>('');
   const [newEmployee, setNewEmployee] = useState({
     name: '',
     email: '',
@@ -121,6 +126,11 @@ export const EmployeeManagementPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleViewDocuments = (employeeId: string) => {
+    setSelectedEmployeeId(employeeId);
+    setShowOnboardingDialog(true);
   };
 
   const filteredEmployees = employees.filter(employee => {
@@ -382,6 +392,10 @@ export const EmployeeManagementPage: React.FC = () => {
                                 <FileText className="h-4 w-4 mr-2" />
                                 View Profile
                               </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleViewDocuments(employee.id)}>
+                                <Paperclip className="h-4 w-4 mr-2" />
+                                View Documents
+                              </DropdownMenuItem>
                              <DropdownMenuItem 
                                className="text-red-600"
                                onClick={() => handleDeleteEmployee(employee.id)}
@@ -447,6 +461,30 @@ export const EmployeeManagementPage: React.FC = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Employee Documents Dialog */}
+      {showOnboardingDialog && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+          <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Employee Documents</CardTitle>
+                  <CardDescription>
+                    Manage documents for {employees.find(e => e.id === selectedEmployeeId)?.name}
+                  </CardDescription>
+                </div>
+                <Button variant="outline" onClick={() => setShowOnboardingDialog(false)}>
+                  Close
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <OnboardingDocuments employeeId={selectedEmployeeId} />
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

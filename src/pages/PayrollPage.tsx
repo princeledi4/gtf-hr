@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
+import { DocumentUploadDialog } from '@/components/documents/DocumentUploadDialog';
 import {
   DollarSign,
   Download,
@@ -16,10 +17,13 @@ import {
   Shield,
   CreditCard,
   Calculator,
+  Upload,
+  Paperclip,
 } from 'lucide-react';
 
 export const PayrollPage: React.FC = () => {
   const { user } = useAuth();
+  const [showAllowanceUploadDialog, setShowAllowanceUploadDialog] = useState(false);
 
   // Mock data for payroll information
   const currentPayslip = {
@@ -308,6 +312,29 @@ export const PayrollPage: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Quick Actions */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Quick Actions</CardTitle>
+          <CardDescription>
+            Common payroll and benefits actions
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Button 
+              className="w-full h-20 flex-col space-y-2" 
+              variant="outline"
+              onClick={() => setShowAllowanceUploadDialog(true)}
+            >
+              <Upload className="h-6 w-6" />
+              <span className="font-medium">Upload Allowance Proof</span>
+              <span className="text-xs text-muted-foreground">Submit supporting docs</span>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 
@@ -412,6 +439,14 @@ export const PayrollPage: React.FC = () => {
       </div>
 
       {user?.role === 'hr' || user?.role === 'admin' ? renderHRView() : renderEmployeeView()}
+
+      {/* Allowance Upload Dialog */}
+      <DocumentUploadDialog
+        open={showAllowanceUploadDialog}
+        onOpenChange={setShowAllowanceUploadDialog}
+        onUploadComplete={() => setShowAllowanceUploadDialog(false)}
+        preselectedType="allowance_proof"
+      />
     </div>
   );
 };

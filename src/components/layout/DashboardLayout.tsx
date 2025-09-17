@@ -11,6 +11,7 @@ import { SettingsPage } from '@/pages/SettingsPage';
 import { TimeAttendancePage } from '@/pages/TimeAttendancePage';
 import { PayrollPage } from '@/pages/PayrollPage';
 import { EmployeeManagementPage } from '@/pages/EmployeeManagementPage';
+import { DocumentManagementPage } from '@/pages/DocumentManagementPage';
 
 export const DashboardLayout: React.FC = () => {
   const { user } = useAuth();
@@ -34,6 +35,7 @@ export const DashboardLayout: React.FC = () => {
             <Route path="/payroll" element={<PayrollPage />} />
             <Route path="/appraisal" element={<AppraisalPage />} />
             <Route path="/employees" element={<EmployeeManagementPage />} />
+            <Route path="/documents" element={<DocumentManagementPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Routes>

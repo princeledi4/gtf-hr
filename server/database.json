@@ -460,6 +460,67 @@
       "createdAt": "2023-01-15T00:00:00.000Z"
     }
   ],
+  "documents": [
+    {
+      "id": "doc-1",
+      "employeeId": "1",
+      "employeeName": "Setor",
+      "type": "cv",
+      "fileName": "cv-1234567890.pdf",
+      "originalFileName": "setor_cv_2024.pdf",
+      "fileSize": 245760,
+      "fileType": "application/pdf",
+      "filePath": "/uploads/cv-1234567890.pdf",
+      "status": "approved",
+      "message": "Updated CV with latest experience",
+      "uploadedAt": "2024-12-01T00:00:00.000Z",
+      "approvedBy": "2",
+      "approverName": "Sarah Wilson",
+      "approvedAt": "2024-12-02T00:00:00.000Z",
+      "isRequired": true,
+      "expiryDate": null,
+      "relatedEntityId": null,
+      "relatedEntityType": null
+    },
+    {
+      "id": "doc-2",
+      "employeeId": "1",
+      "employeeName": "Setor",
+      "type": "ghana_card",
+      "fileName": "ghana-card-1234567890.jpg",
+      "originalFileName": "ghana_card_front.jpg",
+      "fileSize": 156432,
+      "fileType": "image/jpeg",
+      "filePath": "/uploads/ghana-card-1234567890.jpg",
+      "status": "pending",
+      "message": "Front side of Ghana Card",
+      "uploadedAt": "2024-12-10T00:00:00.000Z",
+      "isRequired": true,
+      "expiryDate": "2029-12-31",
+      "relatedEntityId": null,
+      "relatedEntityType": null
+    }
+  ],
+  "documentAuditLogs": [
+    {
+      "id": "audit-1",
+      "documentId": "doc-1",
+      "action": "uploaded",
+      "performedBy": "1",
+      "performerName": "Setor",
+      "timestamp": "2024-12-01T00:00:00.000Z",
+      "details": "Document uploaded: setor_cv_2024.pdf"
+    },
+    {
+      "id": "audit-2",
+      "documentId": "doc-1",
+      "action": "approved",
+      "performedBy": "2",
+      "performerName": "Sarah Wilson",
+      "timestamp": "2024-12-02T00:00:00.000Z",
+      "details": "Document approved"
+    }
+  ],
   "attendanceUploads": [
     {
       "id": "1",

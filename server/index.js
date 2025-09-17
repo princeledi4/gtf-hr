@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import multer from 'multer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,7 +38,9 @@ try {
     integrations: [],
     systemSettings: {},
     onboarding: [],
-    attendanceUploads: []
+    attendanceUploads: [],
+    documents: [],
+    documentAuditLogs: []
   };
 }
 
@@ -53,6 +56,44 @@ const saveDatabase = () => {
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(__dirname, 'uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ 
+  storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'image/jpeg',
+      'image/png',
+      'image/jpg',
+    ];
+    
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type'), false);
+    }
+  }
+});
 
 // Authentication middleware
 const authenticateToken = (req, res, next) => {
@@ -581,6 +622,267 @@ app.put('/api/system-settings', authenticateToken, requireRole(['admin']), (req,
   db.systemSettings = { ...db.systemSettings, ...req.body };
   saveDatabase();
   res.json(db.systemSettings);
+});
+
+// DOCUMENT ROUTES
+app.get('/api/documents', authenticateToken, (req, res) => {
+  const { status, type, employeeId } = req.query;
+  
+  let filteredDocuments = db.documents;
+  
+  // Filter by user role
+  if (req.user.role === 'employee') {
+    filteredDocuments = filteredDocuments.filter(doc => doc.employeeId === req.user.id);
+  }
+  
+  // Apply filters
+  if (status && status !== 'all') {
+    filteredDocuments = filteredDocuments.filter(doc => doc.status === status);
+  }
+  
+  if (type && type !== 'all') {
+    filteredDocuments = filteredDocuments.filter(doc => doc.type === type);
+  }
+  
+  if (employeeId) {
+    filteredDocuments = filteredDocuments.filter(doc => doc.employeeId === employeeId);
+  }
+  
+  res.json(filteredDocuments);
+});
+
+app.get('/api/documents/employee/:employeeId', authenticateToken, (req, res) => {
+  const { employeeId } = req.params;
+  
+  // Check permissions
+  if (req.user.role === 'employee' && req.user.id !== employeeId) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+  
+  const employeeDocuments = db.documents.filter(doc => doc.employeeId === employeeId);
+  res.json(employeeDocuments);
+});
+
+app.post('/api/documents/upload', authenticateToken, upload.single('file'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const employee = db.users.find(u => u.id === req.user.id);
+    if (!employee) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
+
+    const newDocument = {
+      id: uuidv4(),
+      employeeId: req.user.id,
+      employeeName: employee.name,
+      type: req.body.type,
+      fileName: req.file.filename,
+      originalFileName: req.file.originalname,
+      fileSize: req.file.size,
+      fileType: req.file.mimetype,
+      filePath: req.file.path,
+      status: 'pending',
+      message: req.body.message || null,
+      uploadedAt: new Date().toISOString(),
+      isRequired: req.body.isRequired === 'true',
+      expiryDate: req.body.expiryDate || null,
+      relatedEntityId: req.body.relatedEntityId || null,
+      relatedEntityType: req.body.relatedEntityType || null,
+    };
+
+    db.documents.push(newDocument);
+    
+    // Add audit log
+    const auditLog = {
+      id: uuidv4(),
+      documentId: newDocument.id,
+      action: 'uploaded',
+      performedBy: req.user.id,
+      performerName: employee.name,
+      timestamp: new Date().toISOString(),
+      details: `Document uploaded: ${newDocument.originalFileName}`,
+    };
+    
+    if (!db.documentAuditLogs) {
+      db.documentAuditLogs = [];
+    }
+    db.documentAuditLogs.push(auditLog);
+    
+    saveDatabase();
+    res.status(201).json(newDocument);
+  } catch (error) {
+    console.error('Upload error:', error);
+    res.status(500).json({ error: 'Upload failed' });
+  }
+});
+
+app.put('/api/documents/:id/approve', authenticateToken, requireRole(['hr', 'admin']), (req, res) => {
+  const documentIndex = db.documents.findIndex(d => d.id === req.params.id);
+  if (documentIndex === -1) {
+    return res.status(404).json({ error: 'Document not found' });
+  }
+
+  const { status, rejectionReason } = req.body;
+  const approver = db.users.find(u => u.id === req.user.id);
+  
+  const updates = {
+    status,
+    ...(status === 'approved' ? {
+      approvedBy: req.user.id,
+      approverName: approver?.name,
+      approvedAt: new Date().toISOString(),
+    } : {
+      rejectedBy: req.user.id,
+      rejectorName: approver?.name,
+      rejectedAt: new Date().toISOString(),
+      rejectionReason,
+    }),
+  };
+
+  db.documents[documentIndex] = { ...db.documents[documentIndex], ...updates };
+  
+  // Add audit log
+  const auditLog = {
+    id: uuidv4(),
+    documentId: req.params.id,
+    action: status,
+    performedBy: req.user.id,
+    performerName: approver?.name,
+    timestamp: new Date().toISOString(),
+    details: status === 'rejected' ? rejectionReason : 'Document approved',
+  };
+  
+  if (!db.documentAuditLogs) {
+    db.documentAuditLogs = [];
+  }
+  db.documentAuditLogs.push(auditLog);
+  
+  saveDatabase();
+  res.json(db.documents[documentIndex]);
+});
+
+app.get('/api/documents/:id/download', authenticateToken, (req, res) => {
+  const document = db.documents.find(d => d.id === req.params.id);
+  if (!document) {
+    return res.status(404).json({ error: 'Document not found' });
+  }
+
+  // Check permissions
+  if (req.user.role === 'employee' && document.employeeId !== req.user.id) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
+  const filePath = document.filePath;
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: 'File not found' });
+  }
+
+  // Add audit log
+  const auditLog = {
+    id: uuidv4(),
+    documentId: document.id,
+    action: 'downloaded',
+    performedBy: req.user.id,
+    performerName: req.user.name,
+    timestamp: new Date().toISOString(),
+  };
+  
+  if (!db.documentAuditLogs) {
+    db.documentAuditLogs = [];
+  }
+  db.documentAuditLogs.push(auditLog);
+  saveDatabase();
+
+  res.download(filePath, document.originalFileName);
+});
+
+app.delete('/api/documents/:id', authenticateToken, (req, res) => {
+  const documentIndex = db.documents.findIndex(d => d.id === req.params.id);
+  if (documentIndex === -1) {
+    return res.status(404).json({ error: 'Document not found' });
+  }
+
+  const document = db.documents[documentIndex];
+  
+  // Check permissions
+  if (req.user.role === 'employee' && document.employeeId !== req.user.id) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
+  // Delete file from filesystem
+  if (fs.existsSync(document.filePath)) {
+    fs.unlinkSync(document.filePath);
+  }
+
+  db.documents.splice(documentIndex, 1);
+  
+  // Add audit log
+  const auditLog = {
+    id: uuidv4(),
+    documentId: req.params.id,
+    action: 'deleted',
+    performedBy: req.user.id,
+    performerName: req.user.name,
+    timestamp: new Date().toISOString(),
+  };
+  
+  if (!db.documentAuditLogs) {
+    db.documentAuditLogs = [];
+  }
+  db.documentAuditLogs.push(auditLog);
+  
+  saveDatabase();
+  res.status(204).send();
+});
+
+app.get('/api/documents/stats', authenticateToken, requireRole(['hr', 'admin']), (req, res) => {
+  const stats = {
+    totalDocuments: db.documents.length,
+    pendingApproval: db.documents.filter(d => d.status === 'pending').length,
+    approved: db.documents.filter(d => d.status === 'approved').length,
+    rejected: db.documents.filter(d => d.status === 'rejected').length,
+    expiringSoon: db.documents.filter(d => {
+      if (!d.expiryDate) return false;
+      const expiry = new Date(d.expiryDate);
+      const today = new Date();
+      const daysUntilExpiry = Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+      return daysUntilExpiry <= 30 && daysUntilExpiry > 0;
+    }).length,
+    missingRequired: 0, // Would need to calculate based on employees without required docs
+  };
+  
+  res.json(stats);
+});
+
+app.get('/api/documents/required', authenticateToken, (req, res) => {
+  const requiredTypes = ['cv', 'ghana_card'];
+  res.json(requiredTypes);
+});
+
+app.get('/api/documents/compliance/:employeeId', authenticateToken, requireRole(['hr', 'admin']), (req, res) => {
+  const { employeeId } = req.params;
+  const employeeDocuments = db.documents.filter(d => d.employeeId === employeeId);
+  
+  const requiredTypes = ['cv', 'ghana_card'];
+  const compliance = {
+    employeeId,
+    requiredDocuments: requiredTypes.length,
+    submittedDocuments: employeeDocuments.filter(d => requiredTypes.includes(d.type)).length,
+    approvedDocuments: employeeDocuments.filter(d => requiredTypes.includes(d.type) && d.status === 'approved').length,
+    isCompliant: requiredTypes.every(type => 
+      employeeDocuments.some(d => d.type === type && d.status === 'approved')
+    ),
+  };
+  
+  res.json(compliance);
+});
+
+app.get('/api/documents/:id/audit', authenticateToken, requireRole(['hr', 'admin']), (req, res) => {
+  const documentAuditLogs = (db.documentAuditLogs || []).filter(log => log.documentId === req.params.id);
+  res.json(documentAuditLogs);
 });
 
 // SYSTEM MANAGEMENT ROUTES

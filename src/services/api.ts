@@ -290,4 +290,70 @@ export const systemAPI = {
   },
 };
 
+// Document API
+export const documentAPI = {
+  getAll: async (filters?: any) => {
+    const params = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== '') {
+          params.append(key, value.toString());
+        }
+      });
+    }
+    const response = await api.get(`/documents?${params.toString()}`);
+    return response.data;
+  },
+  
+  getByEmployee: async (employeeId: string) => {
+    const response = await api.get(`/documents/employee/${employeeId}`);
+    return response.data;
+  },
+  
+  upload: async (formData: FormData) => {
+    const response = await api.post('/documents/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+  
+  approve: async (documentId: string, approval: any) => {
+    const response = await api.put(`/documents/${documentId}/approve`, approval);
+    return response.data;
+  },
+  
+  download: async (documentId: string) => {
+    const response = await api.get(`/documents/${documentId}/download`, {
+      responseType: 'blob',
+    });
+    return response.data;
+  },
+  
+  delete: async (documentId: string) => {
+    await api.delete(`/documents/${documentId}`);
+  },
+  
+  getStats: async () => {
+    const response = await api.get('/documents/stats');
+    return response.data;
+  },
+  
+  getAuditTrail: async (documentId: string) => {
+    const response = await api.get(`/documents/${documentId}/audit`);
+    return response.data;
+  },
+  
+  getRequiredDocuments: async () => {
+    const response = await api.get('/documents/required');
+    return response.data;
+  },
+  
+  checkCompliance: async (employeeId: string) => {
+    const response = await api.get(`/documents/compliance/${employeeId}`);
+    return response.data;
+  },
+};
+
 export default api;

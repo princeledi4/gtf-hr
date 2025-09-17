@@ -11,6 +11,7 @@ import {
   Star,
   User,
   Settings,
+  FileText,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -61,6 +62,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         name: 'Performance',
         href: '/appraisal',
         icon: Star,
+        roles: ['employee', 'line_manager', 'head_of_unit', 'hr', 'admin'],
+      },
+      {
+        name: 'Documents',
+        href: '/documents',
+        icon: FileText,
         roles: ['employee', 'line_manager', 'head_of_unit', 'hr', 'admin'],
       },
     ];

@@ -10,8 +10,10 @@ import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DocumentUploadDialog } from '@/components/documents/DocumentUploadDialog';
 import { toast } from 'sonner';
 import { leaveAPI } from '@/services/api';
+import { documentAPI } from '@/services/documentAPI';
 import {
   Calendar,
   Plus,
@@ -20,6 +22,7 @@ import {
   User,
   FileText,
   Eye,
+  Paperclip,
 } from 'lucide-react';
 
 export const LeaveRequestPage: React.FC = () => {
@@ -27,6 +30,8 @@ export const LeaveRequestPage: React.FC = () => {
   const [leaveRequests, setLeaveRequests] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showAttachmentDialog, setShowAttachmentDialog] = useState(false);
+  const [selectedRequestId, setSelectedRequestId] = useState<string>('');
   const [newRequest, setNewRequest] = useState({
     type: '',
     startDate: '',
@@ -97,6 +102,17 @@ export const LeaveRequestPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleAttachmentUpload = (requestId: string) => {
+    setSelectedRequestId(requestId);
+    setShowAttachmentDialog(true);
+  };
+
+  const handleAttachmentComplete = () => {
+    setShowAttachmentDialog(false);
+    setSelectedRequestId('');
+    loadLeaveRequests();
   };
 
   const getStatusColor = (status: string) => {
@@ -198,6 +214,16 @@ export const LeaveRequestPage: React.FC = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Document Upload Dialog for Leave Attachments */}
+      <DocumentUploadDialog
+        open={showAttachmentDialog}
+        onOpenChange={setShowAttachmentDialog}
+        onUploadComplete={handleAttachmentComplete}
+        preselectedType="medical_certificate"
+        relatedEntityId={selectedRequestId}
+        relatedEntityType="leave_request"
+      />
 
       {/* Leave Requests */}
       <Card>
@@ -310,6 +336,24 @@ export const LeaveRequestPage: React.FC = () => {
                       <Button onClick={handleCreateRequest} disabled={isLoading}>
                         {isLoading ? 'Submitting...' : 'Submit Request'}
                       </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleAttachmentUpload(request.id)}
+                      >
+                        <Paperclip className="h-4 w-4 mr-1" />
+                        Attachments
+                      </Button>
+                      {request.type === 'sick' && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleAttachmentUpload(request.id)}
+                        >
+                          <Paperclip className="h-4 w-4 mr-1" />
+                          Medical Cert
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </DialogContent>
