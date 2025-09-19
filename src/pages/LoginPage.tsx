@@ -7,8 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-import { Mail, Lock, Info } from 'lucide-react';
-import getfundLogo from '@/assets/images/logos/getfund.png';
+import { Mail, Lock, Info, Building } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const LoginPage: React.FC = () => {
@@ -50,11 +49,7 @@ export const LoginPage: React.FC = () => {
         <div className="text-center space-y-2">
           <div className="flex justify-center">
             <div className="bg-primary/10 p-3 rounded-full">
-              <img
-                src={getfundLogo}
-                alt="Getfund Logo"
-                className="h-8 w-8 object-contain"
-              />
+              <Building className="h-8 w-8 text-primary" />
             </div>
           </div>
           <h1 className="text-3xl font-bold tracking-tight">Welcome Back</h1>

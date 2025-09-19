@@ -310,7 +310,26 @@ export const documentAPI = {
     return response.data;
   },
   
-  upload: async (formData: FormData) => {
+  upload: async (uploadRequest: any) => {
+    const formData = new FormData();
+    formData.append('file', uploadRequest.file);
+    formData.append('type', uploadRequest.type);
+    if (uploadRequest.message) {
+      formData.append('message', uploadRequest.message);
+    }
+    if (uploadRequest.isRequired !== undefined) {
+      formData.append('isRequired', uploadRequest.isRequired.toString());
+    }
+    if (uploadRequest.expiryDate) {
+      formData.append('expiryDate', uploadRequest.expiryDate);
+    }
+    if (uploadRequest.relatedEntityId) {
+      formData.append('relatedEntityId', uploadRequest.relatedEntityId);
+    }
+    if (uploadRequest.relatedEntityType) {
+      formData.append('relatedEntityType', uploadRequest.relatedEntityType);
+    }
+
     const response = await api.post('/documents/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',

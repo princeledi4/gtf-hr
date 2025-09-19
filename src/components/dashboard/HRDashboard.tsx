@@ -194,6 +194,71 @@ export const HRDashboard: React.FC = () => {
     }
   };
 
+  const pendingTasks = [
+    {
+      id: 1,
+      title: 'Review Sarah Chen\'s leave request',
+      priority: 'high',
+      dueDate: 'Today',
+      type: 'leave_approval',
+      description: 'Annual leave for Dec 20-27',
+    },
+    {
+      id: 2,
+      title: 'Complete Q4 performance reviews',
+      priority: 'medium',
+      dueDate: 'Jan 15',
+      type: 'appraisal',
+      description: '8 reviews pending completion',
+    },
+    {
+      id: 3,
+      title: 'Process new hire documentation',
+      priority: 'high',
+      dueDate: 'Tomorrow',
+      type: 'onboarding',
+      description: 'Alex Johnson - Software Engineer',
+    },
+    {
+      id: 4,
+      title: 'Update employee handbook',
+      priority: 'low',
+      dueDate: 'Jan 30',
+      type: 'documentation',
+      description: 'Annual policy review',
+    },
+  ];
+
+  const recentActivities = [
+    {
+      id: 1,
+      type: 'approval',
+      employee: 'Mike Davis',
+      action: 'Approved leave request',
+      time: '30 minutes ago',
+      icon: CheckCircle,
+      color: 'text-green-600',
+    },
+    {
+      id: 2,
+      type: 'hire',
+      employee: 'Emma Wilson',
+      action: 'Completed onboarding',
+      time: '2 hours ago',
+      icon: UserPlus,
+      color: 'text-blue-600',
+    },
+    {
+      id: 3,
+      type: 'payroll',
+      employee: 'Engineering Team',
+      action: 'Processed monthly payroll',
+      time: '1 day ago',
+      icon: DollarSign,
+      color: 'text-purple-600',
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Welcome Header */}

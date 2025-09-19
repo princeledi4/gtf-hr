@@ -336,25 +336,15 @@ export const LeaveRequestPage: React.FC = () => {
                       <Button onClick={handleCreateRequest} disabled={isLoading}>
                         {isLoading ? 'Submitting...' : 'Submit Request'}
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleAttachmentUpload(request.id)}
-                      >
-                        <Paperclip className="h-4 w-4 mr-1" />
-                        Attachments
-                      </Button>
-                      {request.type === 'sick' && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleAttachmentUpload(request.id)}
-                        >
-                          <Paperclip className="h-4 w-4 mr-1" />
-                          Medical Cert
-                        </Button>
-                      )}
                     </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleAttachmentUpload(request.id)}
+                    >
+                      <Paperclip className="h-4 w-4 mr-1" />
+                      Attachments
+                    </Button>
                   </div>
                 </DialogContent>
               </Dialog>

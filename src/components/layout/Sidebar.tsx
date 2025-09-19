@@ -14,8 +14,8 @@ import {
   FileText,
   ChevronLeft,
   ChevronRight,
+  Building,
 } from 'lucide-react';
-import getfundLogo from '@/assets/images/logos/getfund.png';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -108,11 +108,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
         <div className={cn('flex items-center space-x-3', !isOpen && 'justify-center')}>
           <div className="bg-primary/10 p-2 rounded-lg">
-            <img
-              src={getfundLogo}
-              alt="Getfund Logo"
-              className="h-6 w-6 object-contain"
-            />
+            <Building className="h-6 w-6 text-primary" />
           </div>
           {isOpen && (
             <div>

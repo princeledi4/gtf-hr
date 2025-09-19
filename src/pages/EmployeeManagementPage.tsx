@@ -157,17 +157,6 @@ export const EmployeeManagementPage: React.FC = () => {
 
   const departmentOptions = ['all', ...departments.map(dept => dept.name)];
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-      case 'inactive':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-      default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
-    }
-  };
-
   return (
     <div className="space-y-6 max-w-6xl">
       {/* Header */}
@@ -407,12 +396,12 @@ export const EmployeeManagementPage: React.FC = () => {
                                 <Paperclip className="h-4 w-4 mr-2" />
                                 View Documents
                               </DropdownMenuItem>
-                             <DropdownMenuItem 
-                               className="text-red-600"
-                               onClick={() => handleDeleteEmployee(employee.id)}
-                             >
+                              <DropdownMenuItem 
+                                className="text-red-600"
+                                onClick={() => handleDeleteEmployee(employee.id)}
+                              >
                                 <Trash2 className="h-4 w-4 mr-2" />
-                               Delete
+                                Delete
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
