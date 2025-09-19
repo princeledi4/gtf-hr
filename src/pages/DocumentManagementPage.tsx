@@ -17,6 +17,8 @@ import {
   BarChart3,
   Shield,
   AlertTriangle,
+  Clock,
+  CheckCircle,
 } from 'lucide-react';
 
 export const DocumentManagementPage: React.FC = () => {
